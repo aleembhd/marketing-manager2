@@ -104,3 +104,27 @@ telecallerEmail
 telecallerEmail
 :
 "telecaller1@gmail.com" From Firebase Real Time database and it should only display the fetched car details on the ui of maindashboard.html 
+
+
+---------------------------installation---------------------
+# Chrome Installable PWA Implementation Guide
+
+## Project Overview
+Convert our web application into an installable Progressive Web App (PWA) that users can install from Chrome to their devices.
+
+## Requirements
+1. App must be installable from Chrome
+2. Should work offline
+3. Must look and feel like a native app
+4. Should cache important resources
+
+## Implementation Steps
+
+### 1. Create Required Files
+Create these three files in the root directory:
+- manifest.json
+- sw.js (Service Worker)
+- Update index.html with required meta tags
+
+### 2. Meta Tags Implementation
+Add these tags in the `<head>` section of index.html:
