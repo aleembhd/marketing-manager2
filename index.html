@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8"> 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Professional Black & White UI</title>
+    <title>Feedback App</title>
     <!-- Add favicon -->
-    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
-    <link rel="apple-touch-icon" href="images/favicon.ico">
+    <link rel="icon" href="images/favicon.png" type="image/x-icon">
+    <link rel="apple-touch-icon" href="images/favicon.png">
     <!-- Add Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
@@ -153,21 +153,70 @@
         .btn-container {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
         }
 
         .btn {
-            position: relative;
-            padding: 0.8rem;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--primary-color);
-            background: var(--secondary-color);
-            border: none;
+            width: 80%;
+            padding: 15px;
+            background-color: #000;
+            color: #fff;
+            border: 2px solid #fff;
+            border-radius: 30px;
+            font-size: 1.1rem;
             cursor: pointer;
             transition: all 0.3s ease;
+            position: relative;
             overflow: hidden;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+            background-color: #fff;
+            color: #000;
+        }
+
+        /* Cool ripple effect */
+        .btn:after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 1;
+            }
+            20% {
+                transform: scale(25, 25);
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: scale(40, 40);
+            }
+        }
+
+        .btn:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
         }
 
         .btn::before {
@@ -181,7 +230,7 @@
             transition: all 0.3s ease;
             z-index: 1;
         }
-
+ 
         .btn:hover::before {
             left: 0;
         }
@@ -210,7 +259,10 @@
             }
 
             .btn {
-                width: 180px;
+                width: auto;
+                min-width: 200px;
+                white-space: nowrap;
+                padding: 15px 25px;
             }
         }
 
@@ -464,6 +516,27 @@
         .edit-icon:hover + .edit-tooltip {
             opacity: 1;
         }
+
+        .save-button {
+            background: black;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.2s ease;
+        }
+
+        .save-button:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+
+        .save-button:active {
+            transform: scale(0.98);
+        }
     </style>
 </head>
 <body>
@@ -609,21 +682,16 @@
 
                 try {
                     if (currentRole === 'manager' && email === 'admin@gmail.com' && password === 'admin@123') {
-                        // Handle remember me for manager
+                        // Only store admin credentials if remember me is checked
                         if (rememberCheckbox.checked) {
-                            localStorage.setItem('rememberedManagerEmail', email);
-                            localStorage.setItem('rememberedManagerPassword', password);
+                            localStorage.setItem('rememberedManagerEmail', 'admin@gmail.com');
+                            localStorage.setItem('rememberedManagerPassword', 'admin@123');
                         } else {
                             localStorage.removeItem('rememberedManagerEmail');
                             localStorage.removeItem('rememberedManagerPassword');
                         }
-                        
-                        await new Promise(resolve => setTimeout(resolve, 500));
                         showManagerSelectionModal();
                         modal.style.display = 'none';
-                    } else if (currentRole === 'telecaller' && email.startsWith('telecaller')) {
-                        const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
-                        handleSuccessfulLogin(email, 'telecaller');
                     } else {
                         alert("Invalid credentials. Access denied.");
                     }
@@ -637,12 +705,15 @@
             });
 
             function handleSuccessfulLogin(email, role) {
-                if (rememberCheckbox.checked) {
-                    localStorage.setItem(`remembered${role.charAt(0).toUpperCase() + role.slice(1)}Email`, email);
-                    localStorage.setItem(`remembered${role.charAt(0).toUpperCase() + role.slice(1)}Password`, passwordInput.value);
-                } else {
-                    localStorage.removeItem(`remembered${role.charAt(0).toUpperCase() + role.slice(1)}Email`);
-                    localStorage.removeItem(`remembered${role.charAt(0).toUpperCase() + role.slice(1)}Password`);
+                if (role === 'manager') {
+                    // Only store admin credentials if remember me is checked
+                    if (rememberCheckbox.checked && email === 'admin@gmail.com') {
+                        localStorage.setItem('rememberedManagerEmail', 'admin@gmail.com');
+                        localStorage.setItem('rememberedManagerPassword', 'admin@123');
+                    } else if (!rememberCheckbox.checked) {
+                        localStorage.removeItem('rememberedManagerEmail');
+                        localStorage.removeItem('rememberedManagerPassword');
+                    }
                 }
                 
                 if (role === 'telecaller') {
@@ -795,6 +866,9 @@
                                 </span>
                             </div>
                         </div>
+                        <div style="text-align: center;">
+                            <button class="save-button">Save</button>
+                        </div>
                     </div>
                 `;
                 
@@ -831,8 +905,9 @@
                                 nameSpan.style.opacity = '1';
                             }, 200);
                             
-                            // Save to Firebase instead of localStorage
-                            namesRef.child(nameId).set(newName)
+                            // Use formal field names in Firebase
+                            const fieldName = nameId === 'rameshName' ? 'telecallerOne' : 'telecallerTwo';
+                            namesRef.child(fieldName).set(newName)
                                 .then(() => console.log('Name updated successfully'))
                                 .catch(error => console.error('Error updating name:', error));
                         };
@@ -847,8 +922,9 @@
                         });
                     });
 
-                    // Load names from Firebase instead of localStorage
-                    namesRef.child(nameId).once('value', snapshot => {
+                    // Load names using formal field names
+                    const fieldName = nameId === 'rameshName' ? 'telecallerOne' : 'telecallerTwo';
+                    namesRef.child(fieldName).once('value', snapshot => {
                         const savedName = snapshot.val();
                         if (savedName) {
                             nameSpan.textContent = savedName;
@@ -911,13 +987,13 @@
                                     <div class="manager-button-container">
                                         <button id="telecaller1Btn" class="manager-btn">
                                             <span class="button-number">1.</span>
-                                            <span>${names.rameshName || 'Telecaller 1'}</span>
+                                            <span>${names.telecallerOne || 'Telecaller 1'}</span>
                                         </button>
                                     </div>
                                     <div class="manager-button-container">
                                         <button id="telecaller2Btn" class="manager-btn">
                                             <span class="button-number">2.</span>
-                                            <span>${names.sureshName || 'Telecaller 2'}</span>
+                                            <span>${names.telecallerTwo || 'Telecaller 2'}</span>
                                         </button>
                                     </div>
                                 </div>
@@ -929,23 +1005,23 @@
                         // When button 1 is clicked
                         document.getElementById('telecaller1Btn').addEventListener('click', async () => {
                             try {
-                                // Silent background authentication
-                                await firebase.auth().signInWithEmailAndPassword('telecaller1@gmail.com', 'telecaller@123');
                                 localStorage.setItem('telecallerEmail', 'telecaller1@gmail.com');
-                                // Open dialpad directly
                                 window.open('dialpad.html', '_blank');
+                                // Do authentication in background
+                                await firebase.auth().signInWithEmailAndPassword('telecaller1@gmail.com', 'telecaller@123');
                                 telecallerModal.remove();
                             } catch (error) {
                                 alert("Connection failed. Please try again.");
                             }
                         });
 
-                        // Similar for button 2
+                        // Similar optimization for telecaller2Btn
                         document.getElementById('telecaller2Btn').addEventListener('click', async () => {
                             try {
-                                await firebase.auth().signInWithEmailAndPassword('telecaller2@gmail.com', 'telecaller@123');
                                 localStorage.setItem('telecallerEmail', 'telecaller2@gmail.com');
                                 window.open('dialpad.html', '_blank');
+                                // Do authentication in background
+                                await firebase.auth().signInWithEmailAndPassword('telecaller2@gmail.com', 'telecaller@123');
                                 telecallerModal.remove();
                             } catch (error) {
                                 alert("Connection failed. Please try again.");
@@ -982,7 +1058,7 @@
     </script>
     
     <footer style="position: fixed; bottom: 10px; left: 0; right: 0; text-align: center; font-size: 0.8rem; color: var(--accent-color);">
-        &copy; 2024 All rights reserved.git initial-scale
+        &copy; 2024 All rights reserved.
     </footer>
 </body>
 </html>

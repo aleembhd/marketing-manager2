@@ -514,11 +514,16 @@
         });
 
         function initiateCall() {
-            window.location.href = `tel:${phoneNumber}`;
-            callStartTime = new Date();
-            
-            // Check if the number exists in the database and handle accordingly
-            checkExistingCallAndUpdate(phoneNumber);
+            if (phoneNumber.length === 10) {
+                window.location.href = `tel:${phoneNumber}`;
+                callStartTime = new Date();
+                savePhoneNumber(phoneNumber); // Save phone number when call is initiated
+                
+                // Check if the number exists in the database and handle accordingly
+                checkExistingCallAndUpdate(phoneNumber);
+            } else {
+                showErrorPopup();
+            }
         }
 
         function checkExistingCallAndUpdate(number) {
@@ -545,6 +550,7 @@
                                 // Show the regular popup after 10 seconds
                                 setTimeout(() => {
                                     document.getElementById('popupOverlay').style.display = 'flex';
+                                    savePopupState();
                                 }, 10000); // Changed from 5000 to 10000 milliseconds
                             })
                             .catch((error) => {
@@ -555,6 +561,7 @@
                     // If no existing call, show the regular popup after 10 seconds
                     setTimeout(() => {
                         document.getElementById('popupOverlay').style.display = 'flex';
+                        savePopupState();
                     }, 10000); // Changed from 5000 to 10000 milliseconds
                 }
             });
@@ -652,10 +659,12 @@
             if (wasAnswered) {
                 document.getElementById('popupOverlay').style.display = 'none';
                 document.getElementById('popupOverlay2').style.display = 'flex';
+                savePopupState();
             } else {
                 const duration = 'N/A';
                 updateCallStatus(phoneNumber, 'Unanswered', 'Call was not answered', duration);
                 document.getElementById('popupOverlay').style.display = 'none';
+                sessionStorage.removeItem('activePopup');
             }
         }
 
@@ -918,6 +927,7 @@
             const notes = status;
             updateCallStatus(phoneNumber, status, notes, duration);
             document.getElementById('popupOverlay2').style.display = 'none';
+            sessionStorage.removeItem('activePopup');
         }
 
         function calculateDuration() {
@@ -1019,6 +1029,42 @@
                 errorPopup.style.display = 'none';
             }, 3000); // Hide after 3 seconds
         }
+
+        // Add after Firebase initialization
+        function savePopupState() {
+            sessionStorage.setItem('activePopup', JSON.stringify({
+                firstPopup: document.getElementById('popupOverlay').style.display === 'flex',
+                secondPopup: document.getElementById('popupOverlay2').style.display === 'flex',
+                liftedPopup: document.getElementById('popupOverlayLifted').style.display === 'flex',
+                currentNumber: phoneNumber
+            }));
+        }
+
+        // Add this function to store phone number
+        function savePhoneNumber(number) {
+            sessionStorage.setItem('lastDialedNumber', number);
+        }
+
+        // Modify window.addEventListener('load'...)
+        window.addEventListener('load', function() {
+            const savedState = JSON.parse(sessionStorage.getItem('activePopup'));
+            const savedNumber = sessionStorage.getItem('lastDialedNumber');
+            
+            if (savedState && savedNumber) {
+                phoneNumber = savedNumber; // Restore the phone number
+                updateDisplay(); // Update the display with restored number
+                
+                if (savedState.firstPopup) {
+                    document.getElementById('popupOverlay').style.display = 'flex';
+                }
+                if (savedState.secondPopup) {
+                    document.getElementById('popupOverlay2').style.display = 'flex';
+                }
+                if (savedState.liftedPopup) {
+                    document.getElementById('popupOverlayLifted').style.display = 'flex';
+                }
+            }
+        });
     </script>
 </body>
 </html>
