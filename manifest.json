@@ -2,10 +2,13 @@
     "name": "Real Estate Telecaller",
     "short_name": "Telecaller",
     "description": "Real estate telecaller management system",
-    "start_url": "/index.html",
+    "start_url": "./index.html",
+    "scope": ".",
     "display": "standalone",
+    "orientation": "portrait",
     "background_color": "#000000",
     "theme_color": "#000000",
+    "prefer_related_applications": false,
     "icons": [
         {
             "src": "images/logo.png",
@@ -16,7 +19,8 @@
         {
             "src": "images/logo.png",
             "sizes": "512x512",
-            "type": "image/png"
+            "type": "image/png",
+            "purpose": "any"
         }
     ]
 } 
