@@ -12,6 +12,10 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <!-- Add this line for Firebase Database -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <!-- Add these lines right after the existing meta tags -->
+    <meta name="theme-color" content="#000000">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="images/logo.png">
     <style>
         :root {
             --primary-color: #000000;
@@ -1054,6 +1058,18 @@
                     // Handle login errors
                     console.error('Login error:', error);
                 });
+        }
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
         }
     </script>
     
