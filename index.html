@@ -1010,7 +1010,39 @@
                         document.getElementById('telecaller1Btn').addEventListener('click', async () => {
                             try {
                                 localStorage.setItem('telecallerEmail', 'telecaller1@gmail.com');
-                                window.open('dialpad.html', '_blank');
+                                
+                                // Create dialpad modal
+                                const dialpadModal = document.createElement('div');
+                                dialpadModal.className = 'modal';
+                                dialpadModal.style.display = 'block';
+                                
+                                // Load dialpad content
+                                const response = await fetch('dialpad.html');
+                                const html = await response.text();
+                                
+                                // Extract the phone-dialer content from dialpad.html
+                                const parser = new DOMParser();
+                                const doc = parser.parseFromString(html, 'text/html');
+                                const phoneDialer = doc.querySelector('.phone-dialer').outerHTML;
+                                
+                                // Create modal content
+                                dialpadModal.innerHTML = `
+                                    ${editStyles}
+                                    <div class="modal-content" style="max-width: 100%; padding: 0;">
+                                        <button class="back-button" style="position: absolute; top: 15px; left: 15px; background: black; border: none; cursor: pointer; color: white; font-size: 16px; font-weight: 500; padding: 5px 10px; border-radius: 5px; z-index: 1000;">
+                                            ← Back
+                                        </button>
+                                        ${phoneDialer}
+                                    </div>
+                                `;
+                                
+                                document.body.appendChild(dialpadModal);
+                                
+                                // Add back button handler
+                                dialpadModal.querySelector('.back-button').addEventListener('click', () => {
+                                    dialpadModal.remove();
+                                });
+                                
                                 // Do authentication in background
                                 await firebase.auth().signInWithEmailAndPassword('telecaller1@gmail.com', 'telecaller@123');
                                 telecallerModal.remove();
@@ -1019,11 +1051,16 @@
                             }
                         });
 
-                        // Similar optimization for telecaller2Btn
+                        // Similar change for telecaller2Btn
                         document.getElementById('telecaller2Btn').addEventListener('click', async () => {
                             try {
                                 localStorage.setItem('telecallerEmail', 'telecaller2@gmail.com');
-                                window.open('dialpad.html', '_blank');
+                                // Replace window.location.href with history.pushState
+                                history.pushState({}, '', 'dialpad.html');
+                                // Load dialpad content
+                                const response = await fetch('dialpad.html');
+                                const html = await response.text();
+                                document.body.innerHTML = html;
                                 // Do authentication in background
                                 await firebase.auth().signInWithEmailAndPassword('telecaller2@gmail.com', 'telecaller@123');
                                 telecallerModal.remove();

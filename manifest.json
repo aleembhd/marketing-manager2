@@ -3,7 +3,7 @@
     "short_name": "Telecaller",
     "description": "Real estate telecaller management system",
     "start_url": "./index.html",
-    "scope": ".",
+    "scope": "/",
     "display": "standalone",
     "orientation": "portrait",
     "background_color": "#000000",
