@@ -427,12 +427,16 @@
                 duration: duration,
                 dateTime: getCurrentDateTime(),
                 timestamp: firebase.database.ServerValue.TIMESTAMP,
-                telecallerEmail: telecallerEmail // Use the captured telecaller email
+                telecallerEmail: telecallerEmail
             };
 
-            console.log('Saving call data:', callData); // Log the data being saved
+            // Extract telecaller name from email (e.g., 'telecaller3' from 'telecaller3@gmail.com')
+            const telecallerName = telecallerEmail.split('@')[0];
 
-            database.ref('calls').push(callData)
+            console.log('Saving call data:', callData);
+
+            // Save under the telecaller's name node
+            database.ref(`${telecallerName}`).push(callData)
                 .then(() => {
                     console.log('New call data successfully recorded in Firebase:', callData);
                     if (window.opener && !window.opener.closed) {

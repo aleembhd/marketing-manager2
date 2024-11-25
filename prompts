@@ -1,3 +1,26 @@
+---------------telecaller button backend setup---------------
+when telecaller button is clicked then 
+1.
+2.
+buttons are appearing 
+when 1. button is clicked then it is automatically fills email as telecaller1@gmail.com and password as : telecaller@123 & these email and password is already set in the firebase authentication and it opens dialpad.html of telecaller1@gmail.com and password as : telecaller@123 simillarly 
+when 2. button is clicked then it is automatically fills email as telecaller2@gmail.com and password as : telecaller@123 & these email and password is already set in the firebase authentication and it opens dialpad.html of telecaller2@gmail.com and password as : telecaller@123 
+----new button----
+now create a 3. button when that button is clicked  then it should automatically fills email as telecaller1@gmail.com and password as : telecaller@123 & these email and password is already set in the firebase authentication and it should opens dialpad.html of telecaller3@gmail.com and password as : telecaller@123  
+
+
+---------------marketing manager button backend setup---------------
+when marketing manager button is clicked then 
+1.
+2.
+buttons are appearing
+when 1. button is clicked then it  automatically fills email as admin1@gmail.com and password as : admin@123 and opening the dashboard of telecaller1@gmail.com simillarly 
+when 2. button is clicked then it  automatically fills email as admin2@gmail.com and password as : admin@123 and opening the dashboard of telecaller2@gmail.com  
+----new button----
+now create a 3. button when that button is clicked then it should automatically fills email as admin1@gmail.com and password as : admin@123 and open the dashboard of telecaller3@gmail.com
+
+
+
 ----------telecaller and manager login prompts ----------
 Listen to me very carefully focus more on this update with marketing manager buttons clicked the login details With is appearing I need the same login details Pop up when I click telecaller button as well . when telecaller enters email: telecaller1@gmail.com password : telecaller@123 the dial pad should open And every call made on the dialpad .html(script code is in the same file) should store on firebase realtimedatabase with email: telecaller1@gmail.com and when marketing manager enters email: admin1@gmail.com & password: admin@123 it should fetch only calls made by telecaller with email: telecaller1@gmail.com from firebase realtime database on maindashboard.html (script code is linked to script.js). Now case 2 : when telecaller enters email: telecaller2@gmail.com password : telecaller@123 the dial pad should open And every call made on the dialpad .html(script code is in the same file) should store on firebase realtimedatabase with email: telecaller2@gmail.com and when marketing manager enters email: admin2@gmail.com & password: admin@123 it should fetch only calls made by telecaller with email: telecaller2@gmail.com from firebase realtime database on maindashboard.html (script code is linked to script.js).
 
